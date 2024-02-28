@@ -37,14 +37,6 @@ CREATE TABLE loans (
     FOREIGN KEY (customer_id) REFERENCES customers(id)
 );
 
-CREATE TABLE loan_books (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    loan_id INT NOT NULL,
-    book_id INT NOT NULL,
-    FOREIGN KEY (loan_id) REFERENCES loans(id),
-    FOREIGN KEY (book_id) REFERENCES books(id)
-);
-
 CREATE TABLE genres (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -68,4 +60,12 @@ CREATE TABLE books (
     FOREIGN KEY (genre_id) REFERENCES genres(id),
     FOREIGN KEY (publisher_id) REFERENCES publishers(id),
     FOREIGN KEY (author_id) REFERENCES authors(id)
+);
+
+CREATE TABLE loan_books (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    loan_id INT NOT NULL,
+    book_id INT NOT NULL,
+    FOREIGN KEY (loan_id) REFERENCES loans(id),
+    FOREIGN KEY (book_id) REFERENCES books(id)
 );
