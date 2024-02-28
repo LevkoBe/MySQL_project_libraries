@@ -57,46 +57,44 @@ INSERT INTO genres (name, description) VALUES
 
 SELECT * FROM genres;
 
-INSERT INTO books (isbn, title, edition, year_published, price, pages, genre_id, publisher_id, reviews, rating, status) VALUES
-    ('9780590353427', "Harry Potter and the Philosopher\'s Stone", 1, 1997, 10.99, 320, 1, 1, 10000, 4.7, 'Available'),
-    ('9780439064866', 'Harry Potter and the Chamber of Secrets', 1, 1998, 11.99, 352, 1, 1, 9500, 4.6, 'Available'),
-    ('9780439136365', 'Harry Potter and the Prisoner of Azkaban', 1, 1999, 12.99, 448, 1, 1, 9200, 4.8, 'Available'),
-    ('9780439139601', 'Harry Potter and the Goblet of Fire', 1, 2000, 13.99, 640, 1, 1, 8700, 4.9, 'Available'),
-    ('9780439358071', 'Harry Potter and the Order of the Phoenix', 1, 2003, 14.99, 896, 1, 1, 8500, 4.8, 'Available'),
-    ('9780439784542', 'Harry Potter and the Half-Blood Prince', 1, 2005, 15.99, 672, 1, 1, 8200, 4.8, 'Available'),
-    ('9780545010221', 'Harry Potter and the Deathly Hallows', 1, 2007, 16.99, 784, 1, 1, 8100, 4.9, 'Available'),
-    ('9781501175466', 'The Shining', 1, 1977, 9.99, 688, 7, 2, 9500, 4.5, 'Available'),
-    ('9780307743657', 'The Stand', 1, 1978, 10.99, 1152, 7, 2, 9200, 4.6, 'Available'),
-    ('9780451169532', 'Misery', 1, 1987, 11.99, 368, 7, 2, 8900, 4.7, 'Available'),
-    ('9781501166273', 'It', 1, 1986, 12.99, 1168, 7, 2, 8600, 4.8, 'Available'),
-    ('9781501142970', 'The Girl on the Train', 1, 2015, 13.99, 336, 2, 3, 9300, 4.4, 'Available'),
-    ('9781594634024', 'Gone Girl', 1, 2012, 14.99, 432, 2, 3, 9200, 4.5, 'Available'),
-    ('9780385349956', 'The Da Vinci Code', 1, 2003, 15.99, 592, 2, 3, 9000, 4.6, 'Available'),
-    ('9780062315007', 'Crazy Rich Asians', 1, 2013, 16.99, 544, 3, 4, 9500, 4.3, 'Available'),
-    ('9780525555713', 'The Hating Game', 1, 2016, 17.99, 384, 3, 4, 9400, 4.4, 'Available'),
-    ('9780345535527', 'The Notebook', 1, 1996, 18.99, 256, 3, 4, 9100, 4.5, 'Available'),
-    ('9780143135169', 'The Silent Patient', 1, 2019, 19.99, 352, 7, 5, 9600, 4.2, 'Available'),
-    ('9780446675536', 'Big Little Lies', 1, 2014, 20.99, 480, 7, 5, 9500, 4.3, 'Available'),
-    ('9781538718466', 'The Woman in the Window', 1, 2018, 21.99, 448, 7, 5, 9400, 4.4, 'Available'),
-    ('9781982123966', 'The Night Circus', 1, 2011, 22.99, 512, 4, 6, 9300, 4.1, 'Available'),
-    ('9780062073459', 'The Starless Sea', 1, 2019, 23.99, 512, 4, 6, 9200, 4.2, 'Available'),
-    ('9780061854149', 'Neverwhere', 1, 1996, 24.99, 448, 4, 6, 9000, 4.3, 'Available'),
-    ('9780385472579', 'The Testaments', 1, 2019, 25.99, 432, 14, 7, 9900, 4.0, 'Available'),
-    ('9780525559063', "The Handmaid's Tale", 1, 1985, 26.99, 311, 14, 7, 9800, 4.1, 'Available'),
-    ('9781444767465', 'The Blind Assassin', 1, 2000, 27.99, 637, 14, 7, 9700, 4.2, 'Available'),
-    ('9780062273092', 'American Gods', 1, 2001, 28.99, 635, 6, 1, 9500, 4.0, 'Available'),
-    ('9780062457738', 'Norse Mythology', 1, 2017, 29.99, 304, 6, 1, 9400, 4.1, 'Available'),
-    ('9780060735273', 'Stardust', 1, 1999, 30.99, 288, 6, 1, 9300, 4.2, 'Available'),
-    ('9780385671753', 'Oryx and Crake', 1, 2003, 31.99, 374, 6, 1, 9200, 4.3, 'Available'),
-    ('9780385475723', "Cat's Eye", 1, 1988, 32.99, 446, 6, 1, 9100, 4.4, 'Available'),
-    ('9780385544337', 'The Testaments', 1, 2019, 33.99, 432, 14, 1, 9000, 4.5, 'Available'),
-    ('9780385544290', "The Handmaid's Tale", 1, 1985, 34.99, 311, 14, 1, 8900, 4.6, 'Available'),
-    ('9780385653453', 'The Blind Assassin', 1, 2000, 35.99, 637, 14, 1, 8800, 4.7, 'Available');
-
-INSERT INTO books (isbn, title, edition, year_published, price, pages, genre_id, publisher_id, reviews, rating, status) VALUES
-    ('9780140277444', 'Good Omens: The Nice and Accurate Prophecies of Agnes Nutter, Witch', 1, 1990, 17.99, 432, 6, 1, 9100, 4.6, 'Available'), -- Neil Gaiman and Terry Pratchett
-    ('9780553296988', 'The Talisman', 1, 1984, 16.99, 921, 7, 2, 8900, 4.7, 'Available'), -- Stephen King and Peter Straub
-    ('9780345353144', 'The Black Prism', 1, 2010, 18.99, 688, 6, 1, 9200, 4.5, 'Available'); -- Brent Weeks and Peter V. Brett
+INSERT INTO books (isbn, title, edition, year_published, price, pages, publisher_id, reviews, rating, status) VALUES
+    ('9780590353427', "Harry Potter and the Philosopher\'s Stone", 1, 1997, 10.99, 320, 1, 10000, 4.7, 'Available'),
+    ('9780439064866', 'Harry Potter and the Chamber of Secrets', 1, 1998, 11.99, 352, 1, 9500, 4.6, 'Available'),
+    ('9780439136365', 'Harry Potter and the Prisoner of Azkaban', 1, 1999, 12.99, 448, 1, 9200, 4.8, 'Available'),
+    ('9780439139601', 'Harry Potter and the Goblet of Fire', 1, 2000, 13.99, 640, 1, 8700, 4.9, 'Available'),
+    ('9780439358071', 'Harry Potter and the Order of the Phoenix', 1, 2003, 14.99, 896, 1, 8500, 4.8, 'Available'),
+    ('9780439784542', 'Harry Potter and the Half-Blood Prince', 1, 2005, 15.99, 672, 1, 8200, 4.8, 'Available'),
+    ('9780545010221', 'Harry Potter and the Deathly Hallows', 1, 2007, 16.99, 784, 1, 8100, 4.9, 'Available'),
+    ('9781501175466', 'The Shining', 1, 1977, 9.99, 688, 2, 9500, 4.5, 'Available'),
+    ('9780307743657', 'The Stand', 1, 1978, 10.99, 1152, 2, 9200, 4.6, 'Available'),
+    ('9780451169532', 'Misery', 1, 1987, 11.99, 368, 2, 8900, 4.7, 'Available'),
+    ('9781501166273', 'It', 1, 1986, 12.99, 1168, 2, 8600, 4.8, 'Available'),
+    ('9781501142970', 'The Girl on the Train', 1, 2015, 13.99, 336, 3, 9300, 4.4, 'Available'),
+    ('9781594634024', 'Gone Girl', 1, 2012, 14.99, 432, 3, 9200, 4.5, 'Available'),
+    ('9780385349956', 'The Da Vinci Code', 1, 2003, 15.99, 592, 3, 9000, 4.6, 'Available'),
+    ('9780062315007', 'Crazy Rich Asians', 1, 2013, 16.99, 544, 4, 9500, 4.3, 'Available'),
+    ('9780525555713', 'The Hating Game', 1, 2016, 17.99, 384, 4, 9400, 4.4, 'Available'),
+    ('9780345535527', 'The Notebook', 1, 1996, 18.99, 256, 4, 9100, 4.5, 'Available'),
+    ('9780143135169', 'The Silent Patient', 1, 2019, 19.99, 352, 5, 9600, 4.2, 'Available'),
+    ('9780446675536', 'Big Little Lies', 1, 2014, 20.99, 480, 5, 9500, 4.3, 'Available'),
+    ('9781538718466', 'The Woman in the Window', 1, 2018, 21.99, 448, 5, 9400, 4.4, 'Available'),
+    ('9781982123966', 'The Night Circus', 1, 2011, 22.99, 512, 6, 9300, 4.1, 'Available'),
+    ('9780062073459', 'The Starless Sea', 1, 2019, 23.99, 512, 6, 9200, 4.2, 'Available'),
+    ('9780061854149', 'Neverwhere', 1, 1996, 24.99, 448, 6, 9000, 4.3, 'Available'),
+    ('9780385472579', 'The Testaments', 1, 2019, 25.99, 432, 7, 9900, 4.0, 'Available'),
+    ('9780525559063', "The Handmaid's Tale", 1, 1985, 26.99, 311, 7, 9800, 4.1, 'Available'),
+    ('9781444767465', 'The Blind Assassin', 1, 2000, 27.99, 637, 7, 9700, 4.2, 'Available'),
+    ('9780062273092', 'American Gods', 1, 2001, 28.99, 635, 1, 9500, 4.0, 'Available'),
+    ('9780062457738', 'Norse Mythology', 1, 2017, 29.99, 304, 1, 9400, 4.1, 'Available'),
+    ('9780060735273', 'Stardust', 1, 1999, 30.99, 288, 1, 9300, 4.2, 'Available'),
+    ('9780385671753', 'Oryx and Crake', 1, 2003, 31.99, 374, 1, 9200, 4.3, 'Available'),
+    ('9780385475723', "Cat's Eye", 1, 1988, 32.99, 446, 1, 9100, 4.4, 'Available'),
+    ('9780385544337', 'The Testaments', 1, 2019, 33.99, 432, 1, 9000, 4.5, 'Available'),
+    ('9780385544290', "The Handmaid's Tale", 1, 1985, 34.99, 311, 1, 8900, 4.6, 'Available'),
+    ('9780385653453', 'The Blind Assassin', 1, 2000, 35.99, 637, 1, 8800, 4.7, 'Available'),
+    ('9780140277444', 'Good Omens: The Nice and Accurate Prophecies of Agnes Nutter, Witch', 1, 1990, 17.99, 432, 1, 9100, 4.6, 'Available'), -- Neil Gaiman and Terry Pratchett
+    ('9780553296988', 'The Talisman', 1, 1984, 16.99, 921, 2, 8900, 4.7, 'Available'), -- Stephen King and Peter Straub
+    ('9780345353144', 'The Black Prism', 1, 2010, 18.99, 688, 1, 9200, 4.5, 'Available'); -- Brent Weeks and Peter V. Brett
 
 SELECT * FROM books;
 
@@ -192,3 +190,44 @@ INSERT INTO loans (customer_id) VALUES
     (26, 30);
 
 SELECT * FROM loans;
+
+INSERT INTO book_genres (book_id, genre_id) VALUES
+    (1, 1), -- Harry Potter and the Philosopher's Stone - Fantasy
+    (2, 1), -- Harry Potter and the Chamber of Secrets - Fantasy
+    (3, 1), -- Harry Potter and the Prisoner of Azkaban - Fantasy
+    (4, 1), -- Harry Potter and the Goblet of Fire - Fantasy
+    (5, 1), -- Harry Potter and the Order of the Phoenix - Fantasy
+    (6, 1), -- Harry Potter and the Half-Blood Prince - Fantasy
+    (7, 1), -- Harry Potter and the Deathly Hallows - Fantasy
+    (8, 7), -- The Shining - Horror
+    (9, 7), -- The Stand - Horror
+    (10, 7), -- Misery - Horror
+    (11, 7), -- It - Horror
+    (12, 2), -- The Girl on the Train - Mystery
+    (13, 2), -- Gone Girl - Mystery
+    (14, 2), -- The Da Vinci Code - Mystery
+    (15, 3), -- Crazy Rich Asians - Romance
+    (16, 3), -- The Hating Game - Romance
+    (17, 3), -- The Notebook - Romance
+    (18, 7), -- The Silent Patient - Horror
+    (19, 7), -- Big Little Lies - Horror
+    (20, 7), -- The Woman in the Window - Horror
+    (21, 4), -- The Night Circus - Fantasy
+    (22, 4), -- The Starless Sea - Fantasy
+    (23, 4), -- Neverwhere - Fantasy
+    (24, 14), -- The Testaments - Dystopian
+    (25, 14), -- The Handmaid's Tale - Dystopian
+    (26, 14), -- The Blind Assassin - Dystopian
+    (27, 6), -- American Gods - Mythology
+    (28, 6), -- Norse Mythology - Mythology
+    (29, 6), -- Stardust - Mythology
+    (30, 6), -- Oryx and Crake - Mythology
+    (31, 6), -- Cat's Eye - Mythology
+    (32, 14), -- The Testaments - Dystopian
+    (33, 14), -- The Handmaid's Tale - Dystopian
+    (34, 14), -- The Blind Assassin - Dystopian
+    (35, 6), -- Good Omens - Mythology
+    (36, 7), -- The Talisman - Horror
+    (37, 6); -- The Black Prism - Mythology
+
+SELECT * FROM book_genres;
