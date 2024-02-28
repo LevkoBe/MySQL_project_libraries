@@ -53,19 +53,25 @@ CREATE TABLE books (
     pages INT,
     genre_id INT,
     publisher_id INT,
-    author_id INT,
     reviews INT,
     rating DOUBLE(3, 2),
     status ENUM('Sold', 'Available', 'Borrowed', 'Restocking') DEFAULT 'Available',
     FOREIGN KEY (genre_id) REFERENCES genres(id),
-    FOREIGN KEY (publisher_id) REFERENCES publishers(id),
+    FOREIGN KEY (publisher_id) REFERENCES publishers(id)
+);
+
+CREATE TABLE book_authors (
+    book_id INT,
+    author_id INT,
+    PRIMARY KEY (book_id, author_id),
+    FOREIGN KEY (book_id) REFERENCES books(id),
     FOREIGN KEY (author_id) REFERENCES authors(id)
 );
 
 CREATE TABLE loan_books (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    loan_id INT NOT NULL,
-    book_id INT NOT NULL,
+    loan_id INT,
+    book_id INT,
+    PRIMARY KEY (loan_id, book_id),
     FOREIGN KEY (loan_id) REFERENCES loans(id),
     FOREIGN KEY (book_id) REFERENCES books(id)
 );
