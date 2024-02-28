@@ -1,4 +1,3 @@
--- Active: 1706006653571@@127.0.0.1@3306@first_db
 CREATE TABLE publishers (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
@@ -32,11 +31,18 @@ CREATE TABLE authors (
 CREATE TABLE loans (
     id INT AUTO_INCREMENT PRIMARY KEY,
     customer_id INT NOT NULL,
-    book_ids TEXT,
     loan_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     due_date DATETIME DEFAULT (NOW() + INTERVAL 1 MONTH),
     return_date DATETIME DEFAULT NULL,
     FOREIGN KEY (customer_id) REFERENCES customers(id)
+);
+
+CREATE TABLE loan_books (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    loan_id INT NOT NULL,
+    book_id INT NOT NULL,
+    FOREIGN KEY (loan_id) REFERENCES loans(id),
+    FOREIGN KEY (book_id) REFERENCES books(id)
 );
 
 CREATE TABLE genres (
