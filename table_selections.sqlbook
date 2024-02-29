@@ -1,0 +1,61 @@
+-- SQLBook: Markup
+#### Selecting best books based on their rating
+For users to choose books, started from the best rated ones
+-- SQLBook: Code
+SELECT title, rating
+    FROM books
+    ORDER BY rating DESC
+    LIMIT 10;
+-- SQLBook: Markup
+#### Selecting the best authors based on the rating of their books
+For users to be able to review the authors starting from those whose books' ratings are the highest. Also we can show the best 10 authors based on the criteria, which may be used in some articles, or mailings.
+-- SQLBook: Code
+SELECT a.name author, AVG(b.rating) average_rating FROM books b
+    INNER JOIN book_authors ba ON b.id = ba.book_id
+    INNER JOIN authors a ON a.id = ba.author_id
+    GROUP BY a.id
+    ORDER BY average_rating DESC
+    LIMIT 10;
+-- SQLBook: Markup
+#### Selecting the most active customers based on the number of loans they have
+May be used to provide monthly reviews or everyday leaderboards for users.
+-- SQLBook: Code
+SELECT c.name customer, COUNT(DISTINCT l.id) loans_n, COUNT(DISTINCT b.id) books FROM customers c
+    INNER JOIN loans l ON l.customer_id = c.id
+    INNER JOIN loan_books lb ON lb.loan_id = l.id
+    INNER JOIN books b ON b.id = lb.book_id
+    GROUP BY c.id
+    ORDER BY loans_n DESC
+    LIMIT 10;
+-- SQLBook: Markup
+#### Selecting 10 most commonly borrowed books
+May be used in advertising, articles, and in other ways. Helps promote, or popularize some books, or prompt customers to buy books.
+-- SQLBook: Code
+SELECT COUNT(lb.loan_id) loans_number, b.title title FROM books b
+    INNER JOIN loan_books lb ON lb.book_id = b.id
+    GROUP BY b.id
+    ORDER BY loans_number DESC
+    LIMIT 10;
+-- SQLBook: Markup
+#### Selecting users with the highest number of non-returned loans
+May be used for creating special lists of users that may need to be paid more attention, or require some additional notifications.
+-- SQLBook: Code
+SELECT c.name customer, COUNT(DISTINCT l.id) loans_number, COUNT(DISTINCT b.id) non_returned_books FROM customers c
+    LEFT JOIN loans l ON l.customer_id = c.id
+    INNER JOIN loan_books lb ON lb.loan_id = l.id
+    INNER JOIN books b ON b.id = lb.book_id
+    GROUP BY c.id
+    HAVING MAX(l.return_date) IS NULL
+    ORDER BY non_returned_books DESC
+    LIMIT 10;
+-- SQLBook: Markup
+#### Selecting users with the highest number of returned loans
+-- SQLBook: Code
+SELECT c.name customer, COUNT(DISTINCT l.id) loans_returned, COUNT(DISTINCT b.id) book_read FROM customers c
+    LEFT JOIN loans l ON l.customer_id = c.id
+    INNER JOIN loan_books lb ON lb.loan_id = l.id
+    INNER JOIN books b ON b.id = lb.book_id
+    WHERE l.return_date IS NOT NULL
+    GROUP BY c.id
+    ORDER BY loans_returned DESC
+    LIMIT 10;

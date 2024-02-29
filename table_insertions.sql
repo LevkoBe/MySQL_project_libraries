@@ -147,7 +147,7 @@ INSERT INTO loans (customer_id) VALUES
     (7),
     (1);
 
-    INSERT INTO loan_books (loan_id, book_id) VALUES
+INSERT INTO loan_books (loan_id, book_id) VALUES
     (1, 1),
     (2, 2),
     (3, 31),
