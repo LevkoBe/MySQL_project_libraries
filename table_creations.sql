@@ -51,7 +51,6 @@ CREATE TABLE books (
     year_published YEAR,
     price DOUBLE(10, 2) NOT NULL,
     pages INT,
-    genre_id INT,
     publisher_id INT,
     reviews INT,
     rating DOUBLE(3, 2),

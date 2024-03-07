@@ -1,4 +1,4 @@
 
 UPDATE loans
 SET return_date = CURRENT_TIMESTAMP
-WHERE id IN (1, 2, 3, 8, 9);
+WHERE id IN (4, 5, 13, 14, 17);
