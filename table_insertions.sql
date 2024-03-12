@@ -1,4 +1,4 @@
--- Active: 1706006653571@@127.0.0.1@3306@first_db
+-- Active: 1710152672434@@127.0.0.1@3306@first_db
 INSERT INTO publishers (name, address, phone_number, website, email, publications_number) VALUES
     ('Penguin Random House', '1745 Broadway, New York, NY 10019, USA', '+1 212-782-9000', 'www.penguinrandomhouse.com', 'info@penguinrandomhouse.com', 1000),
     ('HarperCollins Publishers', '195 Broadway, New York, NY 10007, USA', '+1 212-207-7000', 'www.harpercollins.com', 'info@harpercollins.com', 700),
