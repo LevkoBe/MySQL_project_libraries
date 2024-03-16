@@ -1,8 +1,8 @@
 -- Active: 1710152672434@@127.0.0.1@3306@first_db
 
-----------------------------------------------------------------
--- = with non-correlated subqueries result ---------------------
-----------------------------------------------------------------
+-----------------------------------------------------------
+-- = with non-correlated subqueries result ----------------
+-----------------------------------------------------------
 -- selection of the most commonly borrowed book
 SELECT b.title book FROM books b
     WHERE b.id = (
@@ -29,10 +29,19 @@ UPDATE books b
             LIMIT 1
         ) AS temp
     );
+-- delete the least borrowed book
+DELETE FROM books
+WHERE id = (
+    SELECT lb.book_id
+    FROM loan_books lb
+    GROUP BY lb.book_id
+    ORDER BY COUNT(1) ASC
+    LIMIT 1
+);
 
-----------------------------------------------------------------
--- IN with non-correlated subqueries result --------------------
-----------------------------------------------------------------
+--------------------------------------------------------
+-- IN with non-correlated subqueries result ------------
+--------------------------------------------------------
 -- books borrowed more than once
 SELECT b.title book FROM books b
     WHERE b.id IN (
@@ -48,6 +57,14 @@ UPDATE books b
         INNER JOIN loans l ON lb.loan_id = l.id
         WHERE l.return_date IS NULL)
     AND b.status = 'Available';
+-- delete overused books
+DELETE FROM books
+WHERE id IN (
+    SELECT lb.book_id
+    FROM loan_books lb
+    GROUP BY lb.book_id
+    HAVING COUNT(1) > 10
+);
 
 ----------------------------------------------------------------
 -- NOT IN with non-correlated subqueries result ----------------
@@ -67,9 +84,17 @@ UPDATE books b
         GROUP BY lb.book_id)
     AND b.price > 10
     AND b.year_published < YEAR(NOW()) - 1;
+-- delete the returned book as though they are disposable
+DELETE FROM books
+WHERE id NOT IN (
+    SELECT lb.book_id
+    FROM loan_books lb
+    INNER JOIN loans l ON l.id = lb.loan_id
+    WHERE l.return_date IS NULL
+);
 
 ----------------------------------------------------------------
--- EXISTS with non-correlated subqueries result -- NOT POSSIBLE???
+-- EXISTS with non-correlated subqueries result ----------------
 ----------------------------------------------------------------
 -- [all] books, if there exist currently unanvailable books
 SELECT b.title book FROM books b
@@ -84,6 +109,16 @@ UPDATE customers c
         SELECT 1 FROM books b
         LEFT JOIN loan_books lb ON lb.book_id = b.id
         WHERE lb.loan_id IS NULL);
+-- delete [all] customers if someone did not return a book in time
+DELETE FROM customers
+WHERE EXISTS (
+    SELECT lb.book_id
+    FROM loan_books lb
+    INNER JOIN loans l ON l.id = lb.loan_id
+    WHERE l.return_date IS NULL
+    AND l.due_date > NOW()
+);
+
 
 ----------------------------------------------------------------
 -- NOT EXISTS with non-correlated subqueries result ------------
@@ -98,6 +133,13 @@ UPDATE genres g
         SELECT 1 FROM books b
         INNER JOIN book_genres bg ON bg.book_id = b.id
         GROUP BY bg.book_id HAVING COUNT(1) > 5);
+-- delete [all] authors if there are no books with less than 66 authors
+DELETE FROM authors
+WHERE NOT EXISTS (
+    SELECT b.id
+    FROM books b
+    INNER JOIN book_authors ba ON ba.book_id = b.id
+    GROUP BY ba.book_id HAVING COUNT(1) < 66);
 
 -------------------------------------------------------
 -- = with correlated subqueries result ----------------
@@ -115,6 +157,13 @@ UPDATE authors a
         SELECT COUNT(1) FROM book_authors ba
         WHERE ba.author_id = a.id
     ) >= 2;
+-- delete suspicious authors
+DELETE FROM authors
+WHERE (
+    SELECT COUNT(1)
+    FROM book_authors ba
+    WHERE ba.book_id = authors.id
+) = 13;
 
 --------------------------------------------------------
 -- IN with correlated subqueries result ----------------
@@ -138,6 +187,16 @@ UPDATE books b
         INNER JOIN authors a ON a.id = ba.author_id
         WHERE ba.book_id = b.id
         AND a.blog IS NOT NULL);
+-- delete books that will probably not be returned
+DELETE FROM books
+WHERE id IN (
+    SELECT lb.book_id
+    FROM loan_books lb
+    JOIN loans l ON l.id = lb.loan_id
+    WHERE lb.book_id = books.id
+    AND l.return_date IS NULL
+    AND l.loan_date <= DATE_SUB(NOW(), INTERVAL 1 YEAR)
+);
 
 ------------------------------------------------------------
 -- NOT IN with correlated subqueries result ----------------
@@ -157,6 +216,13 @@ UPDATE authors a
         WHERE ba.author_id = a.id
         AND b.pages > 500
     );
+-- delete books that no one wants to take
+DELETE FROM books
+WHERE id NOT IN (
+    SELECT lb.book_id
+    FROM loan_books lb
+    WHERE lb.book_id = books.id
+);
 
 ------------------------------------------------------------
 -- EXISTS with correlated subqueries result ----------------
@@ -179,7 +245,13 @@ UPDATE authors a
         GROUP BY ba.author_id
         HAVING COUNT(bg.genre_id) > 5
     );
-
+-- delete a customer who did not return a book
+DELETE FROM customers
+    WHERE EXISTS (
+        SELECT 1 FROM loans l
+        WHERE l.customer_id = customers.id
+        AND l.return_date IS NULL
+    );
 ----------------------------------------------------------------
 -- NOT EXISTS with correlated subqueries result ----------------
 ----------------------------------------------------------------
@@ -200,4 +272,10 @@ UPDATE genres g
         GROUP BY bg.genre_id
         HAVING COUNT(DISTINCT ba.author_id) > 3
     );
-
+-- delete all publishers that didn't write a book
+DELETE FROM publishers
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM books
+    WHERE publisher_id = publishers.id
+);
