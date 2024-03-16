@@ -279,3 +279,49 @@ WHERE NOT EXISTS (
     FROM books
     WHERE publisher_id = publishers.id
 );
+
+
+-- Selecting the customers who have read books with the lowest and the highest ratings
+SELECT DISTINCT c.name 
+    FROM customers c
+    INNER JOIN loans l ON l.customer_id = c.id
+    INNER JOIN loan_books lb ON lb.loan_id = l.id
+    INNER JOIN (
+        (SELECT bo.id FROM books bo ORDER BY bo.rating DESC LIMIT 3)
+        UNION 
+        (SELECT boo.id FROM books boo ORDER BY boo.rating ASC LIMIT 3)
+    ) AS books_union
+    ON books_union.id = lb.book_id;
+
+-- getting some statistics on books, borrowed more than once, and available
+SELECT title, 'Borrowed More Than Once' AS status FROM books WHERE id IN (
+        SELECT lb.book_id FROM loan_books lb
+        GROUP BY lb.book_id
+        HAVING COUNT(1) > 1)
+UNION ALL
+    SELECT title, 'Available' AS status FROM books WHERE id NOT IN (
+        SELECT lb.book_id FROM loan_books lb
+        INNER JOIN loans l ON lb.loan_id = l.id
+        WHERE l.return_date IS NULL);
+
+-- selecting books borrowed more than once, having with authors with blogs
+SELECT b.title AS book FROM books b
+    INNER JOIN book_authors ba ON b.id = ba.book_id
+    INNER JOIN authors a ON ba.author_id = a.id
+    WHERE a.blog IS NOT NULL
+INTERSECT
+    SELECT title FROM books WHERE id IN (
+        SELECT lb.book_id FROM loan_books lb
+        GROUP BY lb.book_id
+        HAVING COUNT(1) > 1
+    );
+
+-- selecting available books but not the horrors or Thrillers
+SELECT title FROM books WHERE status = 'Available'
+    EXCEPT
+SELECT title FROM books
+    WHERE books.id IN (
+        SELECT bg.book_id FROM book_genres bg
+        INNER JOIN genres g ON bg.genre_id = g.id
+        WHERE g.name IN ('Thriller', 'Horror')
+    );
