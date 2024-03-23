@@ -99,7 +99,7 @@ WHERE id NOT IN (
 -- [all] books, if there exist currently unanvailable books
 SELECT b.title book FROM books b
     WHERE EXISTS (
-        SELECT lb.book_id FROM loan_books lb
+        SELECT 1 FROM loan_books lb
         INNER JOIN loans l ON l.id = lb.loan_id
         WHERE l.return_date IS NULL);
 -- update [all] customers, if there exist books which were not loaned
@@ -112,8 +112,7 @@ UPDATE customers c
 -- delete [all] customers if someone did not return a book in time
 DELETE FROM customers
 WHERE EXISTS (
-    SELECT lb.book_id
-    FROM loan_books lb
+    SELECT 1 FROM loan_books lb
     INNER JOIN loans l ON l.id = lb.loan_id
     WHERE l.return_date IS NULL
     AND l.due_date > NOW()
@@ -136,8 +135,7 @@ UPDATE genres g
 -- delete [all] authors if there are no books with less than 66 authors
 DELETE FROM authors
 WHERE NOT EXISTS (
-    SELECT b.id
-    FROM books b
+    SELECT 1 FROM books b
     INNER JOIN book_authors ba ON ba.book_id = b.id
     GROUP BY ba.book_id HAVING COUNT(1) < 66);
 
@@ -201,13 +199,14 @@ WHERE id IN (
 ------------------------------------------------------------
 -- NOT IN with correlated subqueries result ----------------
 ------------------------------------------------------------
-SELECT * FROM books b
+-- not borrowed books
+SELECT b.title book FROM books b
     WHERE b.id NOT IN (
         SELECT lb.book_id
         FROM loan_books lb
         WHERE lb.book_id = b.id
     );
-
+-- add biography details about not writing large books 
 UPDATE authors a
     SET a.biography = CONCAT(a.biography, " Does not write books with more than 500 pages!")
     WHERE a.id NOT IN (
