@@ -31,7 +31,7 @@ SELECT c.name customer, COUNT(DISTINCT l.id) loans_n, COUNT(DISTINCT b.id) books
 #### Selecting 10 most commonly borrowed books
 May be used in advertising, articles, and in other ways. Helps promote, or popularize some books, or prompt customers to buy books.
 -- SQLBook: Code
-SELECT COUNT(lb.loan_id) loans_number, b.title title FROM books b
+SELECT COUNT(lb.loan_id) loans_number, b.title book FROM books b
     INNER JOIN loan_books lb ON lb.book_id = b.id
     GROUP BY b.id
     ORDER BY loans_number DESC
@@ -51,7 +51,7 @@ SELECT c.name customer, COUNT(DISTINCT l.id) loans_number, COUNT(DISTINCT b.id) 
 -- SQLBook: Markup
 #### Selecting users with the highest number of returned loans
 -- SQLBook: Code
-SELECT c.name customer, COUNT(DISTINCT l.id) loans_returned, COUNT(DISTINCT b.id) book_read FROM customers c
+SELECT c.name customer, COUNT(DISTINCT l.id) loans_returned, COUNT(DISTINCT b.id) books_read FROM customers c
     LEFT JOIN loans l ON l.customer_id = c.id
     INNER JOIN loan_books lb ON lb.loan_id = l.id
     INNER JOIN books b ON b.id = lb.book_id
@@ -63,7 +63,7 @@ SELECT c.name customer, COUNT(DISTINCT l.id) loans_returned, COUNT(DISTINCT b.id
 ### Find the Most Popular Genre by Count of Books Sold:
 This information can help bookstore owners or publishers understand which genres are in high demand among readers, allowing them to make informed decisions about stocking inventory or publishing new books.
 -- SQLBook: Code
-SELECT g.name AS genre, COUNT(*) AS loans_count
+SELECT g.name AS genre, COUNT(1) AS loans_count
     FROM genres g
     JOIN book_genres bg ON g.id = bg.genre_id
     JOIN books b ON bg.book_id = b.id
@@ -76,14 +76,15 @@ SELECT g.name AS genre, COUNT(*) AS loans_count
 ### Calculate the Average Loan Duration for Each Genre:
 Librarians can use this information to optimize loan policies, such as setting appropriate due dates or adjusting renewal options, based on the average loan duration for each genre
 -- SQLBook: Code
-SELECT g.name AS genre, AVG(DATEDIFF(l.return_date, l.loan_date)) AS avg_loan_duration_days
-    FROM genres g
-    JOIN book_genres bg ON g.id = bg.genre_id
-    JOIN books b ON bg.book_id = b.id
-    JOIN loan_books lb ON b.id = lb.book_id
-    JOIN loans l ON lb.loan_id = l.id
-    WHERE l.return_date IS NOT NULL
-    GROUP BY g.name;
+SELECT g.name AS genre, AVG(TIMESTAMPDIFF(SECOND, l.loan_date, l.return_date) / 24 / 3600) AS avg_loan_duration_days
+FROM genres g
+JOIN book_genres bg ON g.id = bg.genre_id
+JOIN books b ON bg.book_id = b.id
+JOIN loan_books lb ON b.id = lb.book_id
+JOIN loans l ON lb.loan_id = l.id
+WHERE l.return_date IS NOT NULL
+GROUP BY g.name;
+
 -- SQLBook: Markup
 ### Currently available books
 Is needed for showing customers what books can be borrowed, and people who have the borrowed ones
@@ -91,15 +92,21 @@ Is needed for showing customers what books can be borrowed, and people who have 
 SELECT 
     b.title AS book_title,
     CASE 
-        WHEN l.return_date IS NOT NULL OR lb.book_id IS NULL THEN 'Available'
+        WHEN COUNT(l.return_date) = COUNT(1) OR lb.book_id IS NULL THEN 'Available'
         ELSE '-'
     END AS availability,
     CASE 
-        WHEN l.return_date IS NOT NULL THEN '-'
-        ELSE COALESCE(c.name, '-')
+        WHEN COUNT(l.return_date) = COUNT(1) THEN '-'
+        ELSE COALESCE(MAX(c.name), '-')
     END AS borrower_name
         FROM  books b
         LEFT JOIN  loan_books lb ON b.id = lb.book_id
         LEFT JOIN  loans l ON lb.loan_id = l.id
         LEFT JOIN customers c ON l.customer_id = c.id
-    ORDER BY b.title;
+    GROUP BY b.id
+    ORDER BY availability DESC, b.title;
+-- SQLBook: Markup
+If there are no loans for specific book -- (lb.book_id = NULL) => "Available"
+
+Otherwise we check if the count of returned loans is the same as the count of all records
+(i.e. we check if all the loans are returned)
