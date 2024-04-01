@@ -44,8 +44,10 @@ def update_record(customer_id, new_address):
         """
         cursor.execute(query, (new_address, customer_id))
 
+        updated_records = cursor.rowcount
+        print(f"{updated_records} record(s) updated successfully.")
+
         connection.commit()
-        print("Record updated successfully.")
 
     except mysql.connector.Error as error:
         print("Error:", error)
@@ -67,8 +69,10 @@ def delete_record(customer_id):
         """
         cursor.execute(query, (customer_id,))
 
+        deleted_records = cursor.rowcount
+        print(f"{deleted_records} record(s) deleted successfully.")
+
         connection.commit()
-        print("Record deleted successfully.")
 
     except mysql.connector.Error as error:
         print("Error:", error)
@@ -82,7 +86,7 @@ def delete_record(customer_id):
 def read_data():
     try:
         connection = mysql.connector.connect(**config)
-        # favourite author
+
         query = """
 SELECT c.name AS customer_name, fav_author.name AS favorite_author FROM customers c
     INNER JOIN (
@@ -101,10 +105,9 @@ SELECT c.name AS customer_name, fav_author.name AS favorite_author FROM customer
 
         cursor.execute(query)
 
-        columns = [desc[0] for desc in cursor.description]
-        df = pd.DataFrame(cursor.fetchall(), columns=columns)
-
-        print(df)
+        records = cursor.fetchall()
+        for record in records:
+            print(f"Author {record[1]} is favorite for customer {record[0]}")
 
     except mysql.connector.Error as error:
         print("Error:", error)
