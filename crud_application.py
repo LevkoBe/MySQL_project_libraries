@@ -107,7 +107,7 @@ SELECT c.name AS customer_name, fav_author.name AS favorite_author FROM customer
 
         records = cursor.fetchall()
         for record in records:
-            print(f"Author {record[1]} is favorite for customer {record[0]}")
+            print(f"Author {record['favorite_author']} is favorite for customer {record['customer_name']}")
 
     except mysql.connector.Error as error:
         print("Error:", error)
