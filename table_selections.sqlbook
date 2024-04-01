@@ -110,3 +110,26 @@ If there are no loans for specific book -- (lb.book_id = NULL) => "Available"
 
 Otherwise we check if the count of returned loans is the same as the count of all records
 (i.e. we check if all the loans are returned)
+-- SQLBook: Code
+SELECT c.name customer, a.name favourite_autor FROM customers c
+    INNER JOIN loans l ON c.id = l.customer_id
+    INNER JOIN loan_books lb ON l.id = lb.loan_id
+    INNER JOIN (
+        SELECT books b ON l.book_id = b.id
+        INNER JOIN book_authors ba ON b.id = ba.book_id
+        INNER JOIN authors a ON ba.author_id = a.id
+        GROUP BY b.id
+        ORDER BY COUNT(a.id) DESC) AS fav_authors ON lb.book_id = b.id
+-- SQLBook: Code
+SELECT c.name AS customer_name, fav_author.name AS favorite_author FROM customers c
+    INNER JOIN (
+        SELECT c.id AS customer_id, a.name AS name,
+        ROW_NUMBER() OVER (PARTITION BY c.id ORDER BY COUNT(1) DESC) AS rn
+        FROM customers c
+        INNER JOIN loans l ON c.id = l.customer_id
+        INNER JOIN loan_books lb ON l.id = lb.loan_id
+        INNER JOIN books b ON lb.book_id = b.id
+        INNER JOIN book_authors ba ON b.id = ba.book_id
+        INNER JOIN authors a ON ba.author_id = a.id
+        GROUP BY c.id, a.id
+    ) AS fav_author ON c.id = fav_author.customer_id AND fav_author.rn = 1;
