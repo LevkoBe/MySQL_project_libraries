@@ -12,8 +12,6 @@ BEGIN
 END;
 DELIMITER ;
 
-CALL get_customers_with_name_sproc('John Doe');
-
 ######################################## PROCEDURE 2 ########################################
 #############################################################################################
 # When the id of the customer is known, we can take a look at the loans they did not return:
@@ -29,8 +27,6 @@ BEGIN
     WHERE c.id = c_id AND l.return_date IS NULL;
 END;
 DELIMITER ;
-
-CALL get_loans_of_customer_with_id_sproc(1);
 
 ######################################## PROCEDURE 3 ########################################
 #############################################################################################
@@ -72,12 +68,10 @@ BEGIN
     END IF;
 END//
 DELIMITER ;
-SET @loan_id = 9;
+
 ################################## TRANSACTION NOTE ##################################
 # if we choose the id received from the previous query, the procedure should work fine.
 # but if we call it once again, it'll return "-1", as we do not update any data further.
-CALL return_loan_with_id_sproc(@loan_id);
-SELECT @loan_id AS returned_loan_id;
 
 ######################################## PROCEDURE 4 ########################################
 #############################################################################################
@@ -95,5 +89,4 @@ BEGIN
 END//
 DELIMITER ;
 
-CALL get_books_of_genre_sproc("Fiction", @books_of_the_genre);
-SELECT @books_of_the_genre;
+
