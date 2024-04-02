@@ -5,14 +5,14 @@
 
 # get all customers with 'name'
 DELIMITER //
-CREATE PROCEDURE get_customers_with_name (IN customer_name VARCHAR(100))
+CREATE PROCEDURE get_customers_with_name_sproc (IN customer_name VARCHAR(100))
 BEGIN
     SELECT id, name, email FROM customers
     WHERE customer_name = name;
 END;
 DELIMITER ;
 
-CALL `get_customers_with_name`('John Doe');
+CALL get_customers_with_name_sproc('John Doe');
 
 ######################################## PROCEDURE 2 ########################################
 #############################################################################################
@@ -20,7 +20,7 @@ CALL `get_customers_with_name`('John Doe');
 
 # get all the loans of customer 'id'
 DELIMITER //
-CREATE PROCEDURE get_loans_of_customer_with_id (IN c_id INT)
+CREATE PROCEDURE get_loans_of_customer_with_id_sproc (IN c_id INT)
 BEGIN
     SELECT l.id loan_id, b.title book_title FROM customers c
     INNER JOIN loans l ON l.customer_id = c.id
@@ -30,7 +30,7 @@ BEGIN
 END;
 DELIMITER ;
 
-CALL get_loans_of_customer_with_id(1);
+CALL get_loans_of_customer_with_id_sproc(1);
 
 ######################################## PROCEDURE 3 ########################################
 #############################################################################################
@@ -40,7 +40,7 @@ CALL get_loans_of_customer_with_id(1);
 # *return* loan with 'id'
 
 DELIMITER //
-CREATE PROCEDURE return_loan_with_id (INOUT l_id INT)
+CREATE PROCEDURE return_loan_with_id_sproc (INOUT l_id INT)
 BEGIN
     DECLARE continue_handler INT DEFAULT FALSE;
     DECLARE affected_rows INT;
@@ -72,11 +72,11 @@ BEGIN
     END IF;
 END//
 DELIMITER ;
-SET @loan_id = 10;
+SET @loan_id = 9;
 ################################## TRANSACTION NOTE ##################################
 # if we choose the id received from the previous query, the procedure should work fine.
 # but if we call it once again, it'll return "-1", as we do not update any data further.
-CALL return_loan_with_id(@loan_id);
+CALL return_loan_with_id_sproc(@loan_id);
 SELECT @loan_id AS returned_loan_id;
 
 ######################################## PROCEDURE 4 ########################################
@@ -86,7 +86,7 @@ SELECT @loan_id AS returned_loan_id;
 
 # books of 'genre'
 DELIMITER //
-CREATE PROCEDURE get_books_of_genre (IN gnr VARCHAR(100), OUT books_of_the_genre TEXT)
+CREATE PROCEDURE get_books_of_genre_sproc (IN gnr VARCHAR(100), OUT books_of_the_genre TEXT)
 BEGIN
     SELECT GROUP_CONCAT(' ', b.title) INTO books_of_the_genre FROM books b
         INNER JOIN book_genres bg ON bg.book_id = b.id
@@ -95,5 +95,5 @@ BEGIN
 END//
 DELIMITER ;
 
-CALL get_books_of_genre("Fiction", @books_of_the_genre);
+CALL get_books_of_genre_sproc("Fiction", @books_of_the_genre);
 SELECT @books_of_the_genre;
