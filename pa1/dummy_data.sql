@@ -1,90 +1,5 @@
-CREATE TABLE publishers_0 (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
-  address VARCHAR(100),
-  phone_number VARCHAR(15),
-  website VARCHAR(100),
-  email VARCHAR(100) UNIQUE,
-  publications_number INT DEFAULT 1
-);
-
-CREATE TABLE customers_0 (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    address VARCHAR(100),
-    phone_number VARCHAR(15),
-    email VARCHAR(100) UNIQUE NOT NULL,
-    password VARCHAR(100) NOT NULL
-);
-
-CREATE TABLE authors_0 (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    birth DATE,
-    biography TEXT,
-    nationality VARCHAR(100),
-    awards VARCHAR(255),
-    website VARCHAR(100),
-    blog VARCHAR(100)
-);
-
-CREATE TABLE loans_0 (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    customer_id INT NOT NULL,
-    loan_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    due_date DATETIME DEFAULT (NOW() + INTERVAL 1 MONTH),
-    return_date DATETIME DEFAULT NULL,
-    FOREIGN KEY (customer_id) REFERENCES customers(id)
-);
-
-CREATE TABLE genres_0 (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    description VARCHAR(255) NOT NULL
-);
-
-CREATE TABLE books_0 (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    isbn CHAR(13),
-    title VARCHAR(255) NOT NULL,
-    edition TINYINT UNSIGNED DEFAULT 1,
-    year_published YEAR,
-    price DOUBLE(10, 2) NOT NULL,
-    pages INT,
-    publisher_id INT,
-    reviews INT,
-    rating DOUBLE(3, 2),
-    status ENUM('Sold', 'Available', 'Borrowed', 'Restocking') DEFAULT 'Available',
-    FOREIGN KEY (publisher_id) REFERENCES publishers(id)
-);
-
-CREATE TABLE book_authors_0 (
-    book_id INT,
-    author_id INT,
-    PRIMARY KEY (book_id, author_id),
-    FOREIGN KEY (book_id) REFERENCES books(id),
-    FOREIGN KEY (author_id) REFERENCES authors(id)
-);
-
-CREATE TABLE book_genres_0 (
-    book_id INT,
-    genre_id INT,
-    PRIMARY KEY (book_id, genre_id),
-    FOREIGN KEY (book_id) REFERENCES books(id),
-    FOREIGN KEY (genre_id) REFERENCES genres(id)
-);
-
-CREATE TABLE loan_books_0 (
-    loan_id INT,
-    book_id INT,
-    PRIMARY KEY (loan_id, book_id),
-    FOREIGN KEY (loan_id) REFERENCES loans(id),
-    FOREIGN KEY (book_id) REFERENCES books(id)
-);
-
-
-
-INSERT INTO publishers_0 (name, address, phone_number, website, email, publications_number) VALUES
+-- Active: 1710152672434@@127.0.0.1@3306@first_db
+INSERT INTO publishers (name, address, phone_number, website, email, publications_number) VALUES
     ('Penguin Random House', '1745 Broadway, New York, NY 10019, USA', '+1 212-782-9000', 'www.penguinrandomhouse.com', 'info@penguinrandomhouse.com', 1000),
     ('HarperCollins Publishers', '195 Broadway, New York, NY 10007, USA', '+1 212-207-7000', 'www.harpercollins.com', 'info@harpercollins.com', 700),
     ('Simon & Schuster', '1230 Avenue of the Americas, New York, NY 10020, USA', '+1 212-698-7000', 'www.simonandschuster.com', 'info@simonandschuster.com', 500),
@@ -93,9 +8,9 @@ INSERT INTO publishers_0 (name, address, phone_number, website, email, publicati
     ('Scholastic Corporation', '557 Broadway, New York, NY 10012, USA', '+1 212-343-6100', 'www.scholastic.com', 'info@scholastic.com', 200),
     ('Bloomsbury Publishing', '1385 Broadway, New York, NY 10018, USA', '+1 212-419-5800', 'www.bloomsbury.com', 'info@bloomsbury.com', 150);
 
-SELECT * FROM publishers_0;
+SELECT * FROM publishers;
 
-INSERT INTO customers_0 (name, address, phone_number, email, password) VALUES
+INSERT INTO customers (name, address, phone_number, email, password) VALUES
     ('John Doe', '123 Main St, Anytown, USA', '+1 555-123-4567', 'john.doe@example.com', 'johndoe123'),
     ('Alice Smith', '456 Elm St, Anycity, USA', '+1 555-987-6543', 'alice.smith@example.com', 'alicesmith456'),
     ('Robert Johnson', '789 Oak St, Anyville, USA', '+1 555-567-8901', 'robert.johnson@example.com', 'robertjohnson789'),
@@ -104,9 +19,10 @@ INSERT INTO customers_0 (name, address, phone_number, email, password) VALUES
     ('Sarah Martinez', '333 Oak St, Anytown, USA', '+1 555-345-6789', 'sarah.martinez@example.com', 'sarahmartinez333'),
     ('David Miller', '444 Pine St, Anystate, USA', '+1 555-987-6543', 'david.miller@example.com', 'davidmiller444');
 
-SELECT * FROM customers_0;
 
-INSERT INTO authors_0 (name, birth, biography, nationality, awards, website, blog) VALUES
+SELECT * FROM customers;
+
+INSERT INTO authors (name, birth, biography, nationality, awards, website, blog) VALUES
     ('J.K. Rowling', '1965-07-31', 'British author best known for the "Harry Potter" series.', 'British', 'Multiple awards including the Hugo Award and British Book Awards', 'www.jkrowling.com', 'www.jkrowling.com/blog'),
     ('Stephen King', '1947-09-21', 'American author known for his horror, supernatural fiction, suspense, and fantasy novels.', 'American', 'Multiple awards including Bram Stoker Awards and World Fantasy Awards', 'www.stephenking.com', 'www.stephenking.com/news'),
     ('Agatha Christie', '1890-09-15', 'British writer known for her detective novels, particularly those featuring Hercule Poirot and Miss Marple.', 'British', 'Multiple awards including the Edgar Award and Agatha Award', NULL, NULL),
@@ -114,15 +30,15 @@ INSERT INTO authors_0 (name, birth, biography, nationality, awards, website, blo
     ('Toni Morrison', '1931-02-18', 'American novelist, essayist, editor, and professor, known for her novels exploring the African American experience.', 'American', 'Nobel Prize in Literature, Pulitzer Prize for Fiction', NULL, NULL),
     ('Neil Gaiman', '1960-11-10', 'British author known for his works of fantasy and horror fiction, graphic novels, and comics.', 'British', 'Multiple awards including Hugo, Nebula, and Bram Stoker Awards', 'www.neilgaiman.com', 'www.neilgaiman.com/journal'),
     ('Margaret Atwood', '1939-11-18', 'Canadian poet, novelist, literary critic, and essayist, known for her works of fiction and poetry.', 'Canadian', "Booker Prize, Arthur C. Clarke Award, and Governor General's Award", 'www.margaretatwood.ca', 'www.margaretatwood.ca/news');
-INSERT INTO authors_0 (name, birth, biography, nationality, awards, website, blog) VALUES
+INSERT INTO authors (name, birth, biography, nationality, awards, website, blog) VALUES
     ('Terry Pratchett', '1948-04-28', 'English author known for his Discworld series, combining humor and fantasy elements.', 'English', 'Multiple awards including the Carnegie Medal and British Fantasy Award', 'www.terrypratchett.co.uk', NULL),
     ('Peter Straub', '1943-03-02', 'American author specializing in horror fiction, known for his collaborations with Stephen King.', 'American', 'Multiple awards including Bram Stoker Awards and World Fantasy Awards', 'www.peterstraub.net', NULL),
     ('Brent Weeks', '1977-03-07', 'American author known for his epic fantasy series such as the Night Angel Trilogy and the Lightbringer Series.', 'American', 'NYT Bestselling Author', 'www.brentweeks.com', NULL),
     ('Peter V. Brett', '1973-02-08', 'American author best known for his Demon Cycle series, blending fantasy and horror elements.', 'American', 'NYT Bestselling Author', 'www.petervbrett.com', NULL);
 
-SELECT * FROM authors_0;
+SELECT * FROM authors;
 
-INSERT INTO genres_0 (name, description) VALUES
+INSERT INTO genres (name, description) VALUES
     ('Fiction', 'Literature created from the imagination, not based on real events or people.'),
     ('Mystery', 'Novels focused on solving a crime or puzzle, often involving a detective or amateur sleuth.'),
     ('Romance', 'Novels primarily focusing on the romantic relationship between characters, often with a happy ending.'),
@@ -139,9 +55,9 @@ INSERT INTO genres_0 (name, description) VALUES
     ('Poetry', 'Using language to evoke emotions and express ideas, often characterized by rhythm, meter, and vivid imagery.'),
     ('Biography', 'Telling the life story of a real person, often focusing on significant events, achievements, and experiences.');
 
-SELECT * FROM genres_0;
+SELECT * FROM genres;
 
-INSERT INTO books_0 (isbn, title, edition, year_published, price, pages, publisher_id, reviews, rating, status) VALUES
+INSERT INTO books (isbn, title, edition, year_published, price, pages, publisher_id, reviews, rating, status) VALUES
     ('9780590353427', "Harry Potter and the Philosopher\'s Stone", 1, 1997, 10.99, 320, 1, 10000, 4.7, 'Available'),
     ('9780439064866', 'Harry Potter and the Chamber of Secrets', 1, 1998, 11.99, 352, 1, 9500, 4.6, 'Available'),
     ('9780439136365', 'Harry Potter and the Prisoner of Azkaban', 1, 1999, 12.99, 448, 1, 9200, 4.8, 'Available'),
@@ -180,9 +96,9 @@ INSERT INTO books_0 (isbn, title, edition, year_published, price, pages, publish
     ('9780553296988', 'The Talisman', 1, 1984, 16.99, 921, 2, 8900, 4.7, 'Available'), -- Stephen King and Peter Straub
     ('9780345353144', 'The Black Prism', 1, 2010, 18.99, 688, 1, 9200, 4.5, 'Available'); -- Brent Weeks and Peter V. Brett
 
-SELECT * FROM books_0;
+SELECT * FROM books;
 
-INSERT INTO book_authors_0 (book_id, author_id) VALUES
+INSERT INTO book_authors (book_id, author_id) VALUES
     (1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1), -- J.K. Rowling
     (8, 2), (9, 2), (10, 2), (11, 2), -- Stephen King
     (12, 3), (13, 3), (14, 3), (15, 3), -- Agatha Christie
@@ -198,7 +114,7 @@ INSERT INTO book_authors_0 (book_id, author_id) VALUES
     (31, 10), (31, 11); -- Brent Weeks and Peter V. Brett
 
 
-INSERT INTO loans_0 (customer_id) VALUES
+INSERT INTO loans (customer_id) VALUES
     (1),
     (1),
     (2),
@@ -231,7 +147,7 @@ INSERT INTO loans_0 (customer_id) VALUES
     (7),
     (1);
 
-INSERT INTO loan_books_0 (loan_id, book_id) VALUES
+INSERT INTO loan_books (loan_id, book_id) VALUES
     (1, 1),
     (2, 2),
     (3, 31),
@@ -273,9 +189,9 @@ INSERT INTO loan_books_0 (loan_id, book_id) VALUES
     (26, 29),
     (26, 30);
 
-SELECT * FROM loans_0;
+SELECT * FROM loans;
 
-INSERT INTO book_genres_0 (book_id, genre_id) VALUES
+INSERT INTO book_genres (book_id, genre_id) VALUES
     (1, 1), -- Harry Potter and the Philosopher's Stone - Fantasy
     (2, 1), -- Harry Potter and the Chamber of Secrets - Fantasy
     (3, 1), -- Harry Potter and the Prisoner of Azkaban - Fantasy
@@ -314,140 +230,11 @@ INSERT INTO book_genres_0 (book_id, genre_id) VALUES
     (36, 7), -- The Talisman - Horror
     (37, 6); -- The Black Prism - Mythology
 
-SELECT * FROM book_genres_0;
+SELECT * FROM book_genres;
 
 
 
--- Selecting best books based on their rating
--- For users to choose books, started from the best rated ones
 
-SELECT title, rating
-    FROM books_0
-    ORDER BY rating DESC
-    LIMIT 10;
--- time (ms): 14, 30, 5, 4, 5, 5, 2, 7, 8, 7
--- avg: 8.7
-
--- #### Selecting the best authors based on the rating of their books
--- For users to be able to review the authors starting from those whose books' ratings are the highest.
--- Also we can show the best 10 authors based on the criteria, which may be used in some articles, or mailings.
-
-SELECT a.name author, AVG(b.rating) average_rating FROM books_0 b
-    INNER JOIN book_authors_0 ba ON b.id = ba.book_id
-    INNER JOIN authors_0 a ON a.id = ba.author_id
-    GROUP BY a.id
-    ORDER BY average_rating DESC
-    LIMIT 10;
--- time: 12, 4, 5, 20, 7, 8, 6, 6, 8, 8
--- avg: 8.4
-
--- #### Selecting the most active customers based on the number of loans they have
--- May be used to provide monthly reviews or everyday leaderboards for users.
-
-SELECT c.name customer, COUNT(DISTINCT l.id) loans_n, COUNT(DISTINCT b.id) books FROM customers_0 c
-    INNER JOIN loans_0 l ON l.customer_id = c.id
-    INNER JOIN loan_books_0 lb ON lb.loan_id = l.id
-    INNER JOIN books_0 b ON b.id = lb.book_id
-    GROUP BY c.id
-    ORDER BY loans_n DESC
-    LIMIT 10;
--- cost (ms): 14, 8, 2, 9, 8, 6, 9, 6, 8, 14
--- avg: 8.4
-
--- #### Selecting 10 most commonly borrowed books
--- May be used in advertising, articles, and in other ways. Helps promote, or popularize some books, or prompt customers to buy books.
-
-SELECT COUNT(lb.loan_id) loans_number, b.title title FROM books_0 b
-    INNER JOIN loan_books_0 lb ON lb.book_id = b.id
-    GROUP BY b.id
-    ORDER BY loans_number DESC
-    LIMIT 10;
--- time (ms): 6, 3, 4, 4, 9, 8, 6, 6, 9, 10
--- avg: 6.5
-
--- #### Selecting users with the highest number of non-returned loans
--- May be used for creating special lists of users that may need to be paid more attention, or require some additional notifications.
-
-SELECT c.name customer, COUNT(DISTINCT l.id) loans_number, COUNT(DISTINCT b.id) non_returned_books FROM customers_0 c
-    LEFT JOIN loans_0 l ON l.customer_id = c.id
-    INNER JOIN loan_books_0 lb ON lb.loan_id = l.id
-    INNER JOIN books_0 b ON b.id = lb.book_id
-    GROUP BY c.id
-    HAVING MAX(l.return_date) IS NULL
-    ORDER BY non_returned_books DESC
-    LIMIT 10;
--- time (ms): 14, 4, 6, 10, 5, 7, 11, 7, 7, 18
--- avg: 8.9
-
-
--- #### Selecting users with the highest number of returned loans
-
-SELECT c.name customer, COUNT(DISTINCT l.id) loans_returned, COUNT(DISTINCT b.id) book_read FROM customers_0 c
-    LEFT JOIN loans_0 l ON l.customer_id = c.id
-    INNER JOIN loan_books_0 lb ON lb.loan_id = l.id
-    INNER JOIN books_0 b ON b.id = lb.book_id
-    WHERE l.return_date IS NOT NULL
-    GROUP BY c.id
-    ORDER BY loans_returned DESC
-    LIMIT 10;
--- time (ms): 13, 6, 7, 6, 6, 4, 4, 4, 6, 4
--- avg: 6
-
-
--- ### Find the Most Popular Genre by Count of Books Sold:
--- This information can help bookstore owners or publishers understand which genres are in high demand among readers,
--- allowing them to make informed decisions about stocking inventory or publishing new books.
-
-SELECT g.name AS genre, COUNT(*) AS loans_count
-    FROM genres_0 g
-    JOIN book_genres_0 bg ON g.id = bg.genre_id
-    JOIN books_0 b ON bg.book_id = b.id
-    JOIN loan_books_0 lb ON b.id = lb.book_id
-    JOIN loans_0 l ON lb.loan_id = l.id
-    GROUP BY g.name
-    ORDER BY loans_count DESC
-    LIMIT 10;
--- time (ms): 7, 5, 4, 4, 7, 8, 11, 9, 9, 8
--- avg: 7.2
-
-
--- ### Calculate the Average Loan Duration for Each Genre:
--- Librarians can use this information to optimize loan policies, such as setting appropriate due dates
--- or adjusting renewal options,based on the average loan duration for each genre
-
-SELECT g.name AS genre, AVG(DATEDIFF(l.return_date, l.loan_date)) AS avg_loan_duration_days
-    FROM genres_0 g
-    JOIN book_genres_0 bg ON g.id = bg.genre_id
-    JOIN books_0 b ON bg.book_id = b.id
-    JOIN loan_books_0 lb ON b.id = lb.book_id
-    JOIN loans_0 l ON lb.loan_id = l.id
-    WHERE l.return_date IS NOT NULL
-    GROUP BY g.name;
--- time (ms): 9, 5, 18, 6, 14, 4, 6, 4, 9, 6
--- avg: 8.1
-
-
--- ### Currently available books
--- Is needed for showing customers what books can be borrowed, and people who have the borrowed ones
-
-SELECT 
-    b.title AS book_title,
-    CASE 
-        WHEN l.return_date IS NOT NULL OR lb.book_id IS NULL THEN 'Available'
-        ELSE '-'
-    END AS availability,
-    CASE 
-        WHEN l.return_date IS NOT NULL THEN '-'
-        ELSE COALESCE(c.name, '-')
-    END AS borrower_name
-        FROM  books_0 b
-        LEFT JOIN  loan_books_0 lb ON b.id = lb.book_id
-        LEFT JOIN  loans_0 l ON lb.loan_id = l.id
-        LEFT JOIN customers_0 c ON l.customer_id = c.id
-    ORDER BY b.title;
--- time (ms): 8, 4, 5, 5, 4, 4, 4, 7, 5, 5
--- avg: 5.1
-
--- avgs (ms): 8.7, 8.4, 8.4, 6.5, 8.9, 6, 7.2, 8.1, 5.1
--- aavg: 7.48
-
+UPDATE loans
+SET return_date = CURRENT_TIMESTAMP
+WHERE id IN (1, 3, 15, 16, 19);
